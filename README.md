@@ -98,7 +98,6 @@ src/
     ├── profesionales/      → Profesionales de oficios
     ├── pedidos/            → Pedidos de servicio
     └── categorias/         → Oficios (Plomería, Electricidad, Pintura…)
-ejercicios/                 → Ejercicios de práctica de TypeScript
 ```
 
 ## 🧩 Módulos
@@ -155,19 +154,7 @@ Oficios.jsx
                                ◄───    responde con la lista
 ```
 
-## 📝 Ejercicios de TypeScript
 
-En la carpeta `ejercicios/` están los ejercicios de práctica. Se ejecutan con Node 24 o superior:
-
-```bash
-node ejercicios/ejercicio1.ts
-```
-
-| Archivo | Ejercicio | Qué practica |
-|---|---|---|
-| `ejercicio1.ts` | Gestión de notas | Variables `number` y funciones con tipos de entrada y salida |
-| `ejercicio2.ts` | Gestión de productos | `type`, arrays tipados y retorno `Producto \| undefined` |
-| `ejercicio3.ts` | Registro de estudiantes | `interface`, `filter()` y `find()` |
 
 ## 🚧 Mejoras pendientes
 
