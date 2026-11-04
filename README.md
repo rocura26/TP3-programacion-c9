@@ -16,16 +16,7 @@ Los clientes buscan, comparan y piden el servicio; los profesionales reciben y g
 
 Este repositorio es el **backend** de OfiGO, desarrollado con **NestJS** y **TypeScript**.
 
-Hasta ahora el proyecto era solo un **frontend** en React + Vite ([programacion4-c9-react](https://github.com/lumedina23/programacion4-c9-react)), que guardaba los datos en archivos de prueba y en `localStorage`. Este servidor es el que va a recibir las peticiones del frontend, procesarlas y devolver los datos, para que dejen de quedar guardados solo en el navegador de cada usuario.
-
-| | Frontend (TP anteriores) | Backend (este repositorio) |
-|---|---|---|
-| Tecnología | React + Vite | NestJS |
-| Lenguaje | JavaScript (`.jsx`) | TypeScript (`.ts`) |
-| Corre en | El navegador | El servidor (Node.js) |
-| Devuelve | Pantallas | Datos en formato JSON |
-| Organización | `pages/` y `components/` | `modules/` |
-| Puerto | 5173 | 3000 |
+Es un servidor que recibe peticiones, las procesa y responde con datos en formato JSON. Está organizado en **módulos**, uno por cada tipo de dato que maneja la plataforma.
 
 ---
 
@@ -117,7 +108,7 @@ eligiendo **REST API** y la generación de **CRUD**. Todos los módulos se regis
 | `principal` | `/principal` | Datos de la página principal |
 | `profesionales` | `/profesionales` | Profesionales, con oficio, precio por hora, zona y calificación |
 | `pedidos` | `/pedidos` | Pedidos de servicio, con dirección, fecha, descripción y estado |
-| `categorias` | `/categorias` | Los oficios que se muestran en el frontend |
+| `categorias` | `/categorias` | Los oficios: Plomería, Electricidad, Pintura… |
 
 Cada ruta tiene las cinco operaciones del CRUD:
 
@@ -139,29 +130,11 @@ Cada ruta tiene las cinco operaciones del CRUD:
 | `dto/` | Define qué datos se reciben al crear o modificar |
 | `entities/` | Define la forma de cada dato (por ejemplo, qué campos tiene un pedido) |
 
-## 🔗 Cómo se conecta con el frontend
-
-El frontend le hace pedidos al backend con **axios**, igual que hoy consume la API de feriados:
-
-```
-React (navegador)                      NestJS (servidor)
-─────────────────                      ─────────────────
-Login.jsx
-  axios.post('/auth', datos)   ───►    AuthController  → AuthService
-                               ◄───    responde con el usuario
-Oficios.jsx
-  axios.get('/profesionales')  ───►    ProfesionalesController → ProfesionalesService
-                               ◄───    responde con la lista
-```
-
-
-
 ## 🚧 Mejoras pendientes
 
 * Completar los DTOs y las entities de cada módulo con sus campos.
 * Reemplazar los textos de prueba de los services por la lógica real.
 * Conectar una base de datos.
-* Conectar el frontend de React con estas rutas.
 
 ## 🌿 Forma de trabajo
 
