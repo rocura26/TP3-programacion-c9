@@ -85,8 +85,6 @@ src/
     ├── app/                → Módulo principal: une a todos los demás
     ├── auth/               → Inicio de sesión
     ├── users/              → Usuarios (clientes y profesionales)
-    ├── principal/          → Datos de la página principal
-    ├── profesionales/      → Profesionales de oficios
     ├── pedidos/            → Pedidos de servicio
     └── categorias/         → Oficios (Plomería, Electricidad, Pintura…)
 ```
@@ -104,9 +102,7 @@ eligiendo **REST API** y la generación de **CRUD**. Todos los módulos se regis
 | Módulo | Ruta | Para qué sirve |
 |---|---|---|
 | `auth` | `/auth` | Inicio de sesión de clientes y profesionales |
-| `users` | `/users` | Cuentas de usuario |
-| `principal` | `/principal` | Datos de la página principal |
-| `profesionales` | `/profesionales` | Profesionales, con oficio, precio por hora, zona y calificación |
+| `users` | `/users` | Cuentas de clientes y profesionales; los profesionales suman oficio, precio por hora, zona y descripción |
 | `pedidos` | `/pedidos` | Pedidos de servicio, con dirección, fecha, descripción y estado |
 | `categorias` | `/categorias` | Los oficios: Plomería, Electricidad, Pintura… |
 
