@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { PedidosService } from './pedidos.service.js';
 import { CreatePedidoDto } from './dto/create-pedido.dto.js';
 import { UpdatePedidoDto } from './dto/update-pedido.dto.js';
@@ -18,17 +27,17 @@ export class PedidosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pedidosService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.pedidosService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePedidoDto: UpdatePedidoDto) {
-    return this.pedidosService.update(+id, updatePedidoDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updatePedidoDto: UpdatePedidoDto) {
+    return this.pedidosService.update(id, updatePedidoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pedidosService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.pedidosService.remove(id);
   }
 }

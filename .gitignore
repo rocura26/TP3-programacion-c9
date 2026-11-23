@@ -28,3 +28,5 @@ npm-debug.log*
 
 # TypeScript build info
 *.tsbuildinfo
+
+/src/generated/prisma
