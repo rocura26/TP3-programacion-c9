@@ -1,26 +1,126 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service.js';
+import {
+  isPrismaForeignKeyError,
+  isPrismaUniqueConstraintError,
+} from '../prisma/prisma-error.util.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
 
+// Campos que devuelve la API: todos menos la contraseña
+const userSelect = {
+  id: true,
+  nombre: true,
+  email: true,
+  rol: true,
+  categoriaId: true,
+  zonaId: true,
+  precioHora: true,
+  descripcion: true,
+  createdAt: true,
+  updatedAt: true,
+};
+
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createUserDto: CreateUserDto) {
+    await this.validateEmail(createUserDto.email);
+
+    try {
+      return await this.prisma.user.create({
+        data: createUserDto,
+        select: userSelect,
+      });
+    } catch (error) {
+      this.manejarError(error);
+    }
   }
 
   findAll() {
-    return `This action returns all users`;
+    return this.prisma.user.findMany({ select: userSelect });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: userSelect,
+    });
+
+    if (!user) {
+      throw new NotFoundException(`No existe un usuario con id ${id}.`);
+    }
+
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    await this.findOne(id);
+
+    if (updateUserDto.email) {
+      await this.validateEmail(updateUserDto.email, id);
+    }
+
+    try {
+      return await this.prisma.user.update({
+        where: { id },
+        data: updateUserDto,
+        select: userSelect,
+      });
+    } catch (error) {
+      this.manejarError(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    await this.findOne(id);
+
+    try {
+      return await this.prisma.user.delete({
+        where: { id },
+        select: userSelect,
+      });
+    } catch (error) {
+      if (isPrismaForeignKeyError(error)) {
+        throw new ConflictException(
+          'No se puede eliminar el usuario porque tiene pedidos asociados.',
+        );
+      }
+
+      throw error;
+    }
+  }
+
+  private async validateEmail(email: string, userId?: number) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+
+    if (existingUser && existingUser.id !== userId) {
+      throw new ConflictException(
+        'Ya existe una cuenta con ese correo electrónico.',
+      );
+    }
+  }
+
+  private manejarError(error: unknown): never {
+    if (isPrismaUniqueConstraintError(error)) {
+      throw new ConflictException(
+        'Ya existe una cuenta con ese correo electrónico.',
+      );
+    }
+
+    if (isPrismaForeignKeyError(error)) {
+      throw new BadRequestException('La categoría o la zona indicada no existe.');
+    }
+
+    throw error;
   }
 }
