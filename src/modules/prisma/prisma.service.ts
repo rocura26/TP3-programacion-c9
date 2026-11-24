@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../../generated/prisma/client.js';
 
 @Injectable()
@@ -11,8 +11,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       throw new Error('La variable de entorno DATABASE_URL es obligatoria.');
     }
 
-    // Adaptador de MySQL (en el repo de la profe, con PostgreSQL, es PrismaPg)
-    super({ adapter: new PrismaMariaDb(connectionString) });
+    super({ adapter: new PrismaPg({ connectionString }) });
   }
 
   async onModuleInit() {
