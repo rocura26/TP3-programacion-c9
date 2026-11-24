@@ -34,12 +34,14 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     await this.validateEmail(createUserDto.email);
 
+    // Se separa la contraseña del resto de los datos: no se guarda tal cual
+    const { password, ...datos } = createUserDto;
+
     try {
       return await this.prisma.user.create({
         data: {
-          ...createUserDto,
-          // Nunca se guarda la contraseña tal cual: se guarda su hash
-          password: await hashPassword(createUserDto.password),
+          ...datos,
+          passwordHash: await hashPassword(password),
         },
         select: userSelect,
       });
@@ -72,15 +74,15 @@ export class UsersService {
       await this.validateEmail(updateUserDto.email, id);
     }
 
+    // Si se cambia la contraseña, se guarda su hash
+    const { password, ...datos } = updateUserDto;
+
     try {
       return await this.prisma.user.update({
         where: { id },
         data: {
-          ...updateUserDto,
-          // Si se cambia la contraseña, también se guarda hasheada
-          password: updateUserDto.password
-            ? await hashPassword(updateUserDto.password)
-            : undefined,
+          ...datos,
+          passwordHash: password ? await hashPassword(password) : undefined,
         },
         select: userSelect,
       });

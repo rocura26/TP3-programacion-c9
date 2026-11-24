@@ -43,7 +43,7 @@ model User {
   id                     Int        @id @default(autoincrement())
   nombre                 String     @db.VarChar(100)
   email                  String     @unique @db.VarChar(255)
-  password               String     @db.VarChar(72)
+  passwordHash           String     @db.VarChar(72)
   rol                    Rol
   // Solo para profesionales (el DTO los exige si rol = profesional)
   categoriaId            Int?

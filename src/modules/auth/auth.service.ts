@@ -29,7 +29,7 @@ export class AuthService {
 
     if (
       !user ||
-      !(await verifyPassword(loginAuthDto.password, user.password))
+      !(await verifyPassword(loginAuthDto.password, user.passwordHash))
     ) {
       throw new UnauthorizedException('Correo o contraseña incorrectos.');
     }
