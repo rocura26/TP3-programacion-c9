@@ -24,7 +24,6 @@ npm-debug.log*
 # dotenv environment variable files
 .env
 .env.*
-!.env.example
 
 # TypeScript build info
 *.tsbuildinfo
