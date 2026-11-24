@@ -9,6 +9,7 @@ import {
   isPrismaForeignKeyError,
   isPrismaUniqueConstraintError,
 } from '../prisma/prisma-error.util.js';
+import { hashPassword } from '../auth/password.util.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
 
@@ -35,7 +36,11 @@ export class UsersService {
 
     try {
       return await this.prisma.user.create({
-        data: createUserDto,
+        data: {
+          ...createUserDto,
+          // Nunca se guarda la contraseña tal cual: se guarda su hash
+          password: await hashPassword(createUserDto.password),
+        },
         select: userSelect,
       });
     } catch (error) {
@@ -70,7 +75,13 @@ export class UsersService {
     try {
       return await this.prisma.user.update({
         where: { id },
-        data: updateUserDto,
+        data: {
+          ...updateUserDto,
+          // Si se cambia la contraseña, también se guarda hasheada
+          password: updateUserDto.password
+            ? await hashPassword(updateUserDto.password)
+            : undefined,
+        },
         select: userSelect,
       });
     } catch (error) {
